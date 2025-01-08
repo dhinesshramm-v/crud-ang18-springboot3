@@ -1,15 +1,659 @@
-etected TestNG version 7.4.0
-org.testng.TestNGException: 
-Cannot instantiate class Expat.tests.InternationalProvsearch
-	at org.testng.internal.ObjectFactoryImpl.newInstance(ObjectFactoryImpl.java:30)
-	at org.testng.internal.InstanceCreator.instantiateUsingDefaultConstructor(InstanceCreator.java:193)
-	at org.testng.internal.InstanceCreator.createInstanceUsingObjectFactory(InstanceCreator.java:113)
-	at org.testng.internal.InstanceCreator.createInstance(InstanceCreator.java:79)
-	at org.testng.internal.objects.SimpleObjectDispenser.dispense(SimpleObjectDispenser.java:25)
-	at org.testng.internal.objects.GuiceBasedObjectDispenser.dispense(GuiceBasedObjectDispenser.java:30)
-	at org.testng.internal.ClassImpl.getDefaultInstance(ClassImpl.java:112)
-	at org.testng.internal.ClassImpl.getInstances(ClassImpl.java:165)
-	at org.testng.TestClass.getInstances(TestClass.java:122)
-	at org.testng.TestClass.initTestClassesAndInstances(TestClass.java:102)
-	at org.testng.TestClass.init(TestClass.java:94)
-	at org.testng.TestClass.<init>(TestClass.java:5
+package Expat.tests;
+
+import java.util.Map;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import Expat.pages.InternatioanalProvsearch;
+import Expat.pages.EnterClaimInfoPage;
+import Expat.pages.InternatioanalProvsearch;
+
+public class InternationalProvsearch extends BaseTest {
+	public static String LocationName = "London";
+	
+
+	@Test( enabled = true, groups = {"Regression","Sanity"})
+	public void TC_001() throws Throwable {
+		
+		WebDriver driver = this.getWebDriver();
+	
+		Expat.pages.LoginPageNew loginPage = Expat.pages.LoginPageNew.visit(driver);
+//		HomePage = loginPage.linklogin(map.get("EEID"),map.get("DOB"),map.get("MFirstName"), map.get("MLastName"),
+//				map.get("GroupID"), map.get("Gh_MemberID"),driver);
+		
+		Expat.pages.HomePage hp =  HomePage.visitPage(driver);
+		hp.ClickFindinternationalprovidertab(driver);
+	//	InternatioanalProvsearch = HomePage.ClickFindinternationalprovidertab(driver);
+	
+		System.out.println("Clickd on International provider search tab");
+		InternatioanalProvsearch GOP1 =InternatioanalProvsearch.visitPage(driver);
+	
+		GOP1.ClickOnchangelocationlink("London",driver);
+		System.out.println("click on change location");
+		
+
+		System.out.println("Enter location in Text");
+		GOP1.LocationSearchReferenceNameClick("London",driver);
+		System.out.println("location entered is selected from suggessition list");
+
+		GOP1.changetothislocation(driver);
+		
+		System.out.println("Change location clicked");
+		GOP1.entersearchvalue(driver);
+		GOP1.clicksearch(driver);
+	}
+
+	@Test( enabled = true, groups = {"Regression","Sanity"})
+	public void TC_002() throws Throwable {
+		WebDriver driver = this.getWebDriver();
+		
+		Expat.pages.LoginPageNew loginPage = Expat.pages.LoginPageNew.visit(driver);
+//		HomePage = loginPage.linklogin(map.get("EEID"),map.get("DOB"),map.get("MFirstName"), map.get("MLastName"),
+//				map.get("GroupID"), map.get("Gh_MemberID"),driver);
+	
+		Expat.pages.HomePage hp =  HomePage.visitPage(driver);
+		hp.ClickFindinternationalprovidertab(driver);
+	//	InternatioanalProvsearch = HomePage.ClickFindinternationalprovidertab(driver);
+	
+		System.out.println("Clickd on International provider search tab");
+		InternatioanalProvsearch GOP1 =InternatioanalProvsearch.visitPage(driver);
+	
+		GOP1.ClickOnchangelocationlink("London",driver);
+		System.out.println("click on change location");
+		
+
+		System.out.println("Enter location in Text");
+		GOP1.LocationSearchReferenceNameClick("London",driver);
+		System.out.println("location entered is selected from suggessition list");
+
+		GOP1.changetothislocation(driver);
+		
+		System.out.println("Change location clicked");
+	}
+
+	@Test( enabled = true, groups = {"Regression","Sanity"})
+	public void TC_003() throws Throwable {
+		WebDriver driver = this.getWebDriver();
+		
+		Expat.pages.LoginPageNew loginPage = Expat.pages.LoginPageNew.visit(driver);
+//		HomePage = loginPage.linklogin(map.get("EEID"),map.get("DOB"),map.get("MFirstName"), map.get("MLastName"),
+//				map.get("GroupID"), map.get("Gh_MemberID"),driver);
+		Expat.pages.HomePage hp =  HomePage.visitPage(driver);
+		hp.ClickFindinternationalprovidertab(driver);
+	//	InternatioanalProvsearch = HomePage.ClickFindinternationalprovidertab(driver);
+	
+		System.out.println("Clickd on International provider search tab");
+		InternatioanalProvsearch GOP1 =InternatioanalProvsearch.visitPage(driver);
+	
+		GOP1.ClickOnchangelocationlink("London",driver);
+		System.out.println("click on change location");
+		
+
+		System.out.println("Enter location in Text");
+		GOP1.LocationSearchReferenceNameClick("London",driver);
+		System.out.println("location entered is selected from suggessition list");
+
+		GOP1.changetothislocation(driver);
+		
+		System.out.println("Change location clicked");
+		
+		GOP1.validtenearby(driver);
+		Thread.sleep(1000);
+		System.out.println("nearby search completed");
+	}
+}
+
+//	@Test(enabled = true, dataProvider = "Expat_Data",groups = {"Sanity","Regression"}) // pass
+//	public void TC_ValidateFilteroption(String us, String ps, String EmpID, String DOB, String MFirstname,
+//			String MLastname, String GropID, String Gh_MemberID) throws Throwable {
+//		HomePage = LoginPage.linklogin(EmpID, DOB, MFirstname, MLastname, GropID, Gh_MemberID);
+//		Thread.sleep(15000);
+//
+//		InternatioanalProvsearch = HomePage.ClickFindinternationalprovidertab();
+//		System.out.println("Navigate to 'Find Care->Find An International provider'");
+//		Thread.sleep(10000);
+//		
+//		/*Changelocation = InternatioanalProvsearch.ClickOnchanelocationlink();
+//		System.out.println("click on change location");
+//		Thread.sleep(10000);
+//		 
+//		Changelocation.EnterLocationInChangeLocation(Location);
+//		Thread.sleep(10000);
+//		Changelocation.changetothislocation();*/
+//		Thread.sleep(10000);
+//		InternatioanalProvsearch.entersearchvalue("Derma");
+//		Thread.sleep(4000);
+//		Assert.assertTrue(InternatioanalProvsearch.clicksearch());
+//		Thread.sleep(10000);
+//
+//		seleniumHelper.scrollDown( 400);
+//		Thread.sleep(10000);
+//
+//		InternatioanalProvsearch.OthersFilterClick();
+//		Thread.sleep(4000);
+//		System.out.println("other is expanded");
+//		InternatioanalProvsearch.selectFilterotherDP();
+//	//	Assert.assertTrue(InternatioanalProvsearch.selectother("Direct Pay Available"));
+//	
+//		Thread.sleep(10000);
+//		System.out.println("option selected");
+//		
+//		System.out.println("Provider Card displayed");
+//		InternatioanalProvsearch.validateproviders();
+//		
+//		
+//	}
+//
+
+	( enabled = true, groups = {"Regression","Sanity"})
+	public void TC_004() throws Throwable {
+		WebDriver driver = this.getWebDriver();
+		
+		Expat.pages.LoginPageNew loginPage = Expat.pages.LoginPageNew.visit(driver);
+//		HomePage = loginPage.linklogin(map.get("EEID"),map.get("DOB"),map.get("MFirstName"), map.get("MLastName"),
+//				map.get("GroupID"), map.get("Gh_MemberID"),driver);
+		Expat.pages.HomePage hp =  HomePage.visitPage(driver);
+		hp.ClickFindinternationalprovidertab(driver);
+	//	InternatioanalProvsearch = HomePage.ClickFindinternationalprovidertab(driver);
+	
+		System.out.println("Clickd on International provider search tab");
+		InternatioanalProvsearch GOP1 =InternatioanalProvsearch.visitPage(driver);
+	
+		GOP1.ClickOnchangelocationlink("London",driver);
+		System.out.println("click on change location");
+		
+
+		System.out.println("Enter location in Text");
+		GOP1.LocationSearchReferenceNameClick("London",driver);
+		System.out.println("location entered is selected from suggessition list");
+
+		GOP1.changetothislocation(driver);
+			
+		System.out.println("Change location clicked");
+		
+		GOP1.validtenearby(driver);
+		Thread.sleep(1000);
+		System.out.println("nearby search completed");
+		
+		//InternatioanalProvsearch.selectspecialityexand();
+		GOP1.SpecialityFilterClick(driver);
+		Assert.assertTrue(GOP1.selectspeciality("Cardiology",driver));
+
+	}
+
+
+	( enabled = true, groups = {"Regression","Sanity"})
+	public void TC_005() throws Throwable {
+		WebDriver driver = this.getWebDriver();
+		
+		Expat.pages.LoginPageNew loginPage = Expat.pages.LoginPageNew.visit(driver);
+//		HomePage = loginPage.linklogin(map.get("EEID"),map.get("DOB"),map.get("MFirstName"), map.get("MLastName"),
+//				map.get("GroupID"), map.get("Gh_MemberID"),driver);
+		Expat.pages.HomePage hp =  HomePage.visitPage(driver);
+		hp.ClickFindinternationalprovidertab(driver);
+	//	InternatioanalProvsearch = HomePage.ClickFindinternationalprovidertab(driver);
+	
+		System.out.println("Clickd on International provider search tab");
+		InternatioanalProvsearch GOP1 =InternatioanalProvsearch.visitPage(driver);
+	
+		GOP1.ClickOnchangelocationlink("London",driver);
+		System.out.println("click on change location");
+		
+
+		System.out.println("Enter location in Text");
+		GOP1.LocationSearchReferenceNameClick("London",driver);
+		System.out.println("location entered is selected from suggessition list");
+
+		GOP1.changetothislocation(driver);
+		
+		System.out.println("Change location clicked");
+		GOP1.entersearchvalue(driver);
+		GOP1.clicksearch(driver);
+		//InternatioanalProvsearch.selectfacilityexpand();	
+		GOP1.facilityexpand(driver);
+		GOP1.selectfacility("Hospital",driver);
+		//	InternatioanalProvsearch.clickHospital();
+		
+	}
+
+	( enabled = true, groups = {"Regression","Sanity"})
+	public void TC_006() throws Throwable {
+		WebDriver driver = this.getWebDriver();
+		
+		Expat.pages.LoginPageNew loginPage = Expat.pages.LoginPageNew.visit(driver);
+//		HomePage = loginPage.linklogin(map.get("EEID"),map.get("DOB"),map.get("MFirstName"), map.get("MLastName"),
+//				map.get("GroupID"), map.get("Gh_MemberID"),driver);
+	
+		Expat.pages.HomePage hp =  HomePage.visitPage(driver);
+		hp.ClickFindinternationalprovidertab(driver);
+	//	InternatioanalProvsearch = HomePage.ClickFindinternationalprovidertab(driver);
+	
+		System.out.println("Clickd on International provider search tab");
+		InternatioanalProvsearch GOP1 =InternatioanalProvsearch.visitPage(driver);
+	
+		GOP1.ClickOnchangelocationlink("London",driver);
+		System.out.println("click on change location");
+		
+
+		System.out.println("Enter location in Text");
+		GOP1.LocationSearchReferenceNameClick("London",driver);
+		System.out.println("location entered is selected from suggessition list");
+
+		GOP1.changetothislocation(driver);
+		
+		System.out.println("Change location clicked");
+		GOP1.entersearchvalue(driver);
+		
+		GOP1.clicksearch(driver);		
+		Thread.sleep(10000);
+		GOP1.selectlocationexpand(driver);
+		
+		Assert.assertTrue(GOP1.distncedropsown(driver));
+	}
+
+	( enabled = true, groups = {"Regression","Sanity"})
+	public void TC_007() throws Throwable {
+		WebDriver driver = this.getWebDriver();
+		
+		Expat.pages.LoginPageNew loginPage = Expat.pages.LoginPageNew.visit(driver);
+//		HomePage = loginPage.linklogin(map.get("EEID"),map.get("DOB"),map.get("MFirstName"), map.get("MLastName"),
+//				map.get("GroupID"), map.get("Gh_MemberID"),driver);
+//	
+		Expat.pages.HomePage hp =  HomePage.visitPage(driver);
+		hp.ClickFindinternationalprovidertab(driver);
+	//	InternatioanalProvsearch = HomePage.ClickFindinternationalprovidertab(driver);
+	
+		System.out.println("Clickd on International provider search tab");
+		InternatioanalProvsearch GOP1 =InternatioanalProvsearch.visitPage(driver);
+	
+		GOP1.ClickOnchangelocationlink("London",driver);
+		System.out.println("click on change location");
+		
+
+		System.out.println("Enter location in Text");
+		GOP1.LocationSearchReferenceNameClick("London",driver);
+		System.out.println("location entered is selected from suggessition list");
+
+		GOP1.changetothislocation(driver);
+		
+		System.out.println("Change location clicked");
+		//GOP1.entersearchvalue(driver);
+		GOP1.validatesuggesions(driver);
+		
+		System.out.println("suggession list seen");
+	
+		System.out.println("location entered is selected from suggessition list");
+		GOP1.clicksearch(driver);
+
+	}
+	( enabled = true, groups = {"Regression","Sanity"})
+	public void TC_008() throws Throwable {
+		WebDriver driver = this.getWebDriver();
+		
+		Expat.pages.LoginPageNew loginPage = Expat.pages.LoginPageNew.visit(driver);
+//		HomePage = loginPage.linklogin(map.get("EEID"),map.get("DOB"),map.get("MFirstName"), map.get("MLastName"),
+//				map.get("GroupID"), map.get("Gh_MemberID"),driver);
+		Expat.pages.HomePage hp =  HomePage.visitPage(driver);
+		hp.ClickFindinternationalprovidertab(driver);
+	//	InternatioanalProvsearch = HomePage.ClickFindinternationalprovidertab(driver);
+	
+		System.out.println("Clickd on International provider search tab");
+		InternatioanalProvsearch GOP1 =InternatioanalProvsearch.visitPage(driver);
+	
+		GOP1.ClickOnchangelocationlink("London",driver);
+		System.out.println("click on change location");
+		
+
+		System.out.println("Enter location in Text");
+		GOP1.LocationSearchReferenceNameClick("London",driver);
+		System.out.println("location entered is selected from suggessition list");
+
+		GOP1.changetothislocation(driver);
+		
+		System.out.println("Change location clicked");
+		GOP1.changetothislocation(driver);
+		GOP1.entersearchvalue(driver);
+		
+		GOP1.clicksearch(driver);
+		
+		System.out.println("Menu Header Display");
+		GOP1.headerdisplay(driver);
+		//seleniumHelper.scrollDown( 800);
+		
+		Thread.sleep(10000);
+		System.out.println("Map Validation");
+		GOP1.mapvalidation(driver);
+		System.out.println("Map seen");
+		
+		seleniumHelper.scrollDown( 800,driver);
+
+		System.out.println("Provider Card validations below");
+	
+	}
+
+
+//*******************************START Code By Kajal***************************
+	
+	( enabled = true, groups = {"Regression","Sanity"})
+	public void TC_009() throws Throwable {
+		WebDriver driver = this.getWebDriver();
+		
+		Expat.pages.LoginPageNew loginPage = Expat.pages.LoginPageNew.visit(driver);
+//		HomePage = loginPage.linklogin(map.get("EEID"),map.get("DOB"),map.get("MFirstName"), map.get("MLastName"),
+//				map.get("GroupID"), map.get("Gh_MemberID"),driver);
+	
+		Expat.pages.HomePage hp =  HomePage.visitPage(driver);
+		hp.ClickFindinternationalprovidertab(driver);
+	//	InternatioanalProvsearch = HomePage.ClickFindinternationalprovidertab(driver);
+	
+		System.out.println("Clickd on International provider search tab");
+		InternatioanalProvsearch GOP1 =InternatioanalProvsearch.visitPage(driver);
+	
+		GOP1.ClickOnchangelocationlink("London",driver);
+		System.out.println("click on change location");
+		
+
+		System.out.println("Enter location in Text");
+		GOP1.LocationSearchReferenceNameClick("London",driver);
+		System.out.println("location entered is selected from suggessition list");
+
+		GOP1.changetothislocation(driver);
+		
+		System.out.println("Change location clicked");
+		GOP1.entersearchvalue(driver);
+		GOP1.clicksearch(driver);
+		
+		System.out.println("Menu Header Display");
+		GOP1.headerdisplay(driver);
+		//seleniumHelper.scrollDown( 800);
+		
+		//Thread.sleep(10000);
+		System.out.println("Map Validation");
+		GOP1.mapvalidation(driver);
+		System.out.println("Map seen");
+		
+		seleniumHelper.scrollDown( 800,driver);
+		Thread.sleep(10000);
+
+		System.out.println("Provider Card validations below");
+		GOP1.ProviderCardDisplay(driver);
+		System.out.println("Provider Card displayed with card");
+		
+		GOP1.DirectPayInfoText(driver);
+		System.out.println("Provider Card displayed with DirectPayInfoText");
+		GOP1.DirectPayButton(driver);
+		System.out.println("Provider Card displayed with DirectPayButton");
+		
+		Thread.sleep(10000);
+		
+		GOP1.ProviderClick(driver);
+		Thread.sleep(10000);
+		System.out.println("Click on Provider Card displayed");
+		GOP1.DirectPayInfoTextOnOverview(driver);
+		
+		GOP1.clickReturnToSearch(driver);
+		Thread.sleep(10000);
+		System.out.println("details seen clickReturnToSearch");
+		
+		
+	}
+	
+	( enabled = true, groups = {"Regression","Sanity"})
+	public void TC_010() throws Throwable {
+		WebDriver driver = this.getWebDriver();
+		
+		Expat.pages.LoginPageNew loginPage = Expat.pages.LoginPageNew.visit(driver);
+//		HomePage = loginPage.linklogin(map.get("EEID"),map.get("DOB"),map.get("MFirstName"), map.get("MLastName"),
+//				map.get("GroupID"), map.get("Gh_MemberID"),driver);
+		Expat.pages.HomePage hp =  HomePage.visitPage(driver);
+		hp.ClickFindinternationalprovidertab(driver);
+	//	InternatioanalProvsearch = HomePage.ClickFindinternationalprovidertab(driver);
+	
+		System.out.println("Clickd on International provider search tab");
+		InternatioanalProvsearch GOP1 =InternatioanalProvsearch.visitPage(driver);
+	
+		GOP1.ClickOnchangelocationlink("London",driver);
+		System.out.println("click on change location");
+		
+
+		System.out.println("Enter location in Text");
+		GOP1.LocationSearchReferenceNameClick("London",driver);
+		System.out.println("location entered is selected from suggessition list");
+
+		GOP1.changetothislocation(driver);
+		
+		System.out.println("Change location clicked");
+		
+		GOP1.entersearchvalue("Hospital",driver);
+		Thread.sleep(2000);
+		GOP1.clicksearch(driver);
+		seleniumHelper.scrollDown(600,driver);
+		seleniumHelper.scrollDown(400,driver);
+		Thread.sleep(10000);
+		
+
+		GOP1.DirectPayInfoText(driver);
+		
+		GOP1.DirectPayButton(driver);
+		
+	}	
+
+	///US2270232 Automation
+	( enabled = true, groups = {"Regression","Sanity"})
+	public void TC_011() throws Throwable {
+		WebDriver driver = this.getWebDriver();
+		
+		Expat.pages.LoginPageNew loginPage = Expat.pages.LoginPageNew.visit(driver);
+//		HomePage = loginPage.linklogin(map.get("EEID"),map.get("DOB"),map.get("MFirstName"), map.get("MLastName"),
+//				map.get("GroupID"), map.get("Gh_MemberID"),driver);
+		InternatioanalProvsearch GOP1 =InternatioanalProvsearch.visitPage(driver);
+		
+		GOP1 = HomePage.NavFindCareToFindInterProvider(driver);
+		Thread.sleep(10000);
+		GOP1.BackToHomePage(driver);
+		Thread.sleep(10000);
+		GOP1 = HomePage.NavFindCareToArrangePaymentProvider(driver);
+		Thread.sleep(10000);
+		GOP1.BackToHomePage(driver);
+		Thread.sleep(10000);
+		GOP1 = HomePage.clickonArrangedirectpayment(driver);
+		Thread.sleep(10000);
+		GOP1.BackToHomePage(driver);
+		Thread.sleep(10000);
+		GOP1 = HomePage.ClickFindinternationalprovidertab(driver);
+		System.out.println("Navigate to 'Find Care->Find An International provider'");
+		Thread.sleep(10000);
+		
+		GOP1.ClickOnchangelocationlink("London",driver);
+		System.out.println("click on change location");
+		Thread.sleep(5000);
+		 
+		//Changelocation = new Expat.pages.Changelocation();
+		//Changelocation.EnterLocationInChangeLocation("London");
+		Thread.sleep(10000);
+		System.out.println("Enter location in Text");
+		
+		GOP1.LocationSearchReferenceNameClick("London",driver);
+		Thread.sleep(10000);
+		System.out.println("location entered is selected from suggessition list");
+		
+		GOP1.changetothislocation(driver);
+	
+		System.out.println("CHange location clicked");
+		
+		GOP1.entersearchvalue("Hospital",driver);
+	
+		System.out.println("Search text Hospital entered");
+		
+		Assert.assertTrue(GOP1.clicksearch(driver));
+		System.out.println("1");
+		
+		Thread.sleep(10000);
+		seleniumHelper.scrollDown(800,driver);
+		
+		GOP1.FirstArrangePaymentToProviderButtonClick(driver);
+		System.out.println("2");
+		
+		GOP1.ValidateModal(driver);
+		System.out.println("3");
+		Thread.sleep(10000);
+		GOP1.ValidatePhoneNo("IBK",driver);
+		System.out.println("4");
+		Thread.sleep(10000);
+		GOP1.ValidateEmailId("IBK",driver);
+		System.out.println("5");
+		GOP1.ClickOKOnModal(driver);
+		System.out.println("6");
+	}
+	
+	( enabled = true, groups = {"Regression","Sanity"})
+	public void TC_012() throws Throwable {
+		WebDriver driver = this.getWebDriver();
+		
+		Expat.pages.LoginPageNew loginPage = Expat.pages.LoginPageNew.visit(driver);
+//		HomePage = loginPage.linklogin(map.get("EEID"),map.get("DOB"),map.get("MFirstName"), map.get("MLastName"),
+//				map.get("GroupID"), map.get("Gh_MemberID"),driver);
+		InternatioanalProvsearch GOP1 =InternatioanalProvsearch.visitPage(driver);
+		
+		Thread.sleep(15000);
+		GOP1 = HomePage.NavFindCareToFindInterProvider(driver);
+		Thread.sleep(10000);
+		GOP1.BackToHomePage(driver);
+		Thread.sleep(10000);
+		GOP1 = HomePage.NavFindCareToArrangePaymentProvider(driver);
+		Thread.sleep(10000);
+		GOP1.BackToHomePage(driver);
+		Thread.sleep(10000);
+		GOP1 = HomePage.clickonArrangedirectpayment(driver);
+		Thread.sleep(10000);
+		GOP1.BackToHomePage(driver);
+		Thread.sleep(10000);
+		GOP1 = HomePage.ClickFindinternationalprovidertab(driver);
+		System.out.println("Navigate to 'Find Care->Find An International provider'");
+		Thread.sleep(10000);
+		
+		GOP1.ClickOnchangelocationlink("London",driver);
+		System.out.println("click on change location");
+		Thread.sleep(10000);
+		 
+		//Changelocation = new Expat.pages.Changelocation();
+		//Changelocation.EnterLocationInChangeLocation("London");
+		Thread.sleep(10000);
+		System.out.println("Enter location in Text");
+		
+		GOP1.LocationSearchReferenceNameClick("London",driver);
+		Thread.sleep(10000);
+		System.out.println("location entered is selected from suggessition list");
+		
+		GOP1.changetothislocation(driver);
+		Thread.sleep(10000);
+		System.out.println("CHange location clicked");
+		
+		GOP1.entersearchvalue("Hospital",driver);
+		Thread.sleep(4000);
+		System.out.println("Search text Hospital entered");
+		
+		Assert.assertTrue(GOP1.clicksearch(driver));
+		System.out.println("1");
+		
+	
+		seleniumHelper.scrollDown( 800,driver);
+		
+		GOP1.FirstArrangePaymentToProviderButtonClick(driver);
+		System.out.println("2");
+		
+		GOP1.ValidateModal(driver);
+		System.out.println("3");
+		Thread.sleep(10000);
+		GOP1.ValidatePhoneNo("Ford",driver);
+		System.out.println("4");
+		Thread.sleep(10000);
+		GOP1.ValidateEmailId("Ford",driver);
+		System.out.println("5");
+		GOP1.ClickOKOnModal(driver);
+		System.out.println("6");
+	
+	}
+		
+	( enabled = true, groups = {"Regression","Sanity"})
+	public void TC_013() throws Throwable {
+		WebDriver driver = this.getWebDriver();
+		
+		Expat.pages.LoginPageNew loginPage = Expat.pages.LoginPageNew.visit(driver);
+//		HomePage = loginPage.linklogin(map.get("EEID"),map.get("DOB"),map.get("MFirstName"), map.get("MLastName"),
+//				map.get("GroupID"), map.get("Gh_MemberID"),driver);
+		InternatioanalProvsearch GOP1 =InternatioanalProvsearch.visitPage(driver);
+		Thread.sleep(15000);
+		GOP1 = HomePage.NavFindCareToFindInterProvider(driver);
+		Thread.sleep(10000);
+		GOP1.BackToHomePage(driver);
+		Thread.sleep(10000);
+		GOP1 = HomePage.NavFindCareToArrangePaymentProvider(driver);
+		Thread.sleep(10000);
+		GOP1.BackToHomePage(driver);
+		Thread.sleep(10000);
+		GOP1 = HomePage.clickonArrangedirectpayment(driver);
+		Thread.sleep(10000);
+		GOP1.BackToHomePage(driver);
+		Thread.sleep(10000);
+		GOP1 = HomePage.ClickFindinternationalprovidertab(driver);
+		System.out.println("Navigate to 'Find Care->Find An International provider'");
+		Thread.sleep(10000);
+		
+		GOP1.ClickOnchangelocationlink("London",driver);
+		System.out.println("click on change location");
+		Thread.sleep(10000);
+		 
+		//Changelocation = new Expat.pages.Changelocation();
+		//Changelocation.EnterLocationInChangeLocation("London");
+		Thread.sleep(20000);
+		System.out.println("Enter location in Text");
+		
+		GOP1.LocationSearchReferenceNameClick("London",driver);
+		Thread.sleep(10000);
+		System.out.println("location entered is selected from suggessition list");
+		
+		GOP1.changetothislocation(driver);
+		Thread.sleep(10000);
+		System.out.println("CHange location clicked");
+		
+		GOP1.entersearchvalue("Hospital",driver);
+		Thread.sleep(4000);
+		System.out.println("Search text Hospital entered");
+		
+		Assert.assertTrue(GOP1.clicksearch(driver));
+		System.out.println("1");
+		
+		Thread.sleep(10000);
+		seleniumHelper.scrollDown(800, driver);
+		
+		GOP1.FirstArrangePaymentToProviderButtonClick(driver);
+		System.out.println("2");
+		
+		GOP1.ValidateModal(driver);
+		System.out.println("3");
+		Thread.sleep(10000);
+		GOP1.ValidatePhoneNo("Other",driver);
+		System.out.println("4");
+		Thread.sleep(10000);
+		GOP1.ValidateEmailId("Other",driver);
+		System.out.println("5");
+		GOP1.ClickOKOnModal(driver);
+		System.out.println("6");
+	
+	}
+	//****************END CODE BY KAjal**********************
+	@FindBy(xpath = "//*[contains(text(),'CHANGE LOCATION')]")	
+	public WebElement Changeloclink;
+	@FindBy(xpath = "//*[@id='location4']")
+	public static  WebElement ClickOnLocation ;
+
+}
+
+
+
+
