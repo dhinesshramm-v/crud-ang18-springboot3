@@ -1,52 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="GGAutomationSuite">
-
-    <!-- Test for IE Browser -->
-    <test name="GGAutomationSuite_IE">
-        <parameter name="browser" value="internet explorer" />
-        <parameter name="browserversion" value="11.0" />
-        <parameter name="os" value="Windows 10" />
-
-        <classes>
-            <class name="Expat.tests.HomePageTest" />
-            <class name="Expat.tests.FindCareTabOptions" />
-            <class name="Expat.tests.FooterTest" />
-            <class name="Expat.tests.GOPConfirmationTest" />
-            <class name="Expat.tests.GOPSendEmailModalTest" />
-            <class name="Expat.tests.GuaranteeOfPaymentTest" />
-            <class name="Expat.tests.InternationalProvsearch" />
-
-            <!-- Uncomment the lines below if needed
-            <class name="Expat.tests.AddOTPPageforDependent" />
-            <class name="Expat.tests.AddReimbursementTest" />
-            <class name="Expat.tests.CancelEditReimbursementOTP" />
-            <class name="Expat.tests.changeloc" />
-            <class name="Expat.tests.ClaimsForExcelaCoverSheet" />
-            <class name="Expat.tests.FindCareTabOptions" />
-            <class name="Expat.tests.FooterTest" />
-            <class name="Expat.tests.EditPreferenceTest" />
-            <class name="Expat.tests.EnterClaimInfoTest" />
-            <class name="Expat.tests.GOPConfirmationTest" />
-            <class name="Expat.tests.GOPSendEmailModalTest" />
-            <class name="Expat.tests.GuaranteeOfPaymentTest" />
-            <class name="Expat.tests.InternationalProvsearch" />
-            <class name="Expat.tests.ManageReimbursementSubscriber" />
-            <class name="Expat.tests.WindowsTitletest" />
-            <class name="Expat.tests.OneTimePrefTest" />
-            <class name="Expat.tests.ReviewClaim" />
-            <class name="Expat.tests.memberContactInfoTest" />
-            <class name="Expat.tests.SubmissionConfirmationTest" />
-            <class name="Expat.tests.SubmissionConfirmationTest" />
-            <class name="Expat.tests.SubmitRequiredDocTest" />
-            <class name="Expat.tests.TransacNeedDocTest" />
-            <class name="Expat.tests.UploadFilesTest" />
-            <class name="Expat.tests.ViewGOP_Page" />
-            <class name="Expat.tests.viewinternationalclaims" />
-            <class name="Expat.tests.ViewReimbursement" />
-            -->
-
-        </classes>
-    </test>
-
-</suite> <!-- Suite -->
+<test name="GGAutomationSuite_IE">
+		<parameter name="browser" value="internet explorer" />
+		<parameter name="browserversion" value="11.0" />
+		<parameter name="os" value="Windows 10" />
+  <classes>
+			<class name="Expat.tests.HomePageTest" />
+			<class name="Expat.tests.FindCareTabOptions" />
+			<class name="Expat.tests.FooterTest" />
+			<class name="Expat.tests.GOPConfirmationTest" />
+			<class name="Expat.tests.GOPSendEmailModalTest" />
+			<class name="Expat.tests.GuaranteeOfPaymentTest" />
+			<class name="Expat.tests.InternationalProvsearch" />
+ </classes>
+</test>
+</suite>
