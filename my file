@@ -58,3 +58,6 @@
 	</test>
 
 </suite> <!-- Suite -->
+
+The markup in the document preceding the root element must be well-formed.
+Downloading external resources is disabled.
