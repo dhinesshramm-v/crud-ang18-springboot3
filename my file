@@ -1,18 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="GGAutomationSuite">
-<test name="GGAutomationSuite_IE">
-		<parameter name="browser" value="internet explorer" />
-		<parameter name="browserversion" value="11.0" />
-		<parameter name="os" value="Windows 10" />
-  <classes>
-			<class name="Expat.tests.HomePageTest" />
-			<class name="Expat.tests.FindCareTabOptions" />
-			<class name="Expat.tests.FooterTest" />
-			<class name="Expat.tests.GOPConfirmationTest" />
-			<class name="Expat.tests.GOPSendEmailModalTest" />
-			<class name="Expat.tests.GuaranteeOfPaymentTest" />
-			<class name="Expat.tests.InternationalProvsearch" />
- </classes>
-</test>
+<suite name="GGAutomationSuite" verbose="1" parallel="tests" thread-count="3">
+    <!-- Global Parameters -->
+    <parameter name="os" value="Windows 10" />
+    
+    <!-- Modern Browser Configuration -->
+    <test name="GGAutomation_Chrome">
+        <parameter name="browser" value="chrome" />
+        <parameter name="browserversion" value="latest" />
+        
+        <!-- Group tests by functionality -->
+        <groups>
+            <run>
+                <include name="smoke"/>
+                <include name="regression"/>
+            </run>
+        </groups>
+        
+        <classes>
+            <!-- Core Functionality Tests -->
+            <class name="Expat.tests.HomePageTest" />
+            <class name="Expat.tests.FooterTest" />
+            
+            <!-- Care Search Tests -->
+            <class name="Expat.tests.FindCareTabOptions" />
+            <class name="Expat.tests.InternationalProvsearch" />
+            
+            <!-- GOP Related Tests -->
+            <class name="Expat.tests.GOPConfirmationTest" />
+            <class name="Expat.tests.GOPSendEmailModalTest" />
+            <class name="Expat.tests.GuaranteeOfPaymentTest" />
+        </classes>
+    </test>
+    
+    <!-- Cross-browser Testing -->
+    <test name="GGAutomation_Firefox">
+        <parameter name="browser" value="firefox" />
+        <parameter name="browserversion" value="latest" />
+        <classes>
+            <class name="Expat.tests.HomePageTest" />
+            <class name="Expat.tests.FindCareTabOptions" />
+        </classes>
+    </test>
 </suite>
