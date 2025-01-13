@@ -1,45 +1,706 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="GGAutomationSuite" verbose="1" parallel="tests" thread-count="3">
-    <!-- Global Parameters -->
-    <parameter name="os" value="Windows 10" />
+package Expat.tests;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.rmi.UnexpectedException;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import org.json.JSONException;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.LocalFileDetector;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
+import org.testng.ITestResult;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
+
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+import com.saucelabs.common.SauceOnDemandAuthentication;
+import com.saucelabs.common.SauceOnDemandSessionIdProvider;
+import com.saucelabs.testng.SauceOnDemandAuthenticationProvider;
+
+import Expat.pages.AllAboutUGHCg;
+
+import Expat.pages.ArrangeDirectPayment;
+import Expat.pages.Changelocation;
+import Expat.pages.EnterClaimInfoPage;
+import Expat.pages.GuaranteeOfPayment;
+import Expat.pages.HomePage;
+import Expat.pages.InternatioanalProvsearch;
+import Expat.pages.InternationalEAP;
+import Expat.pages.Languageassiastancenotice;
+import Expat.pages.LoginPage;
+import Expat.pages.LoginPageNew;
+import Expat.pages.TermsAndConditions;
+import Expat.pages.UHGglobalinteligencecenter;
+import Expat.pages.ViewinternationalclaimsPage;
+import Expat.pages.WebsitePrivacyNotice;
+import core.generic.utilities.AutomationCore;
+import core.generic.utilities.Automation_Dashboard;
+import core.generic.utilities.ExcelUtility;
+import core.generic.utilities.PasswordProtect;
+import core.generic.utilities.Reporter;
+import core.generic.utilities.SeleniumHelper;
+import core.generic.utilities.DBHelper;
+
+
+
+public class BaseTest extends DBHelper implements SauceOnDemandSessionIdProvider, SauceOnDemandAuthenticationProvider{
+               public static WebDriver testDriver= null;
+               
+    Automation_Dashboard dashboard;
+	public HomePage HomePage;
+	public LoginPage LoginPage;
+	public Expat.pages.SharFeedbackPage SharFeedbackPage;
+	public Expat.pages.AllFooterlinks AllFooterlinks;
+	public TermsAndConditions TermsAndConditions;
+	public WebsitePrivacyNotice WebsitePrivacyNotice;
+	public Expat.pages.BrowserPreferences BrowserPreferences;
+	public InternatioanalProvsearch InternatioanalProvsearch;
+	public Languageassiastancenotice Languageassiastancenotice;
+	public Changelocation Changelocation;
+	public Expat.pages.AccountSettingPage AccountSettingPage;
+	public Expat.pages.ViewYourBenefitPage ViewYourBenefitPage;
+	public ViewinternationalclaimsPage Viewinternationalclaims;
+	public Expat.pages.Viewinternationalclaims Viewinternationalclaims1;
+	public Expat.pages.Submitaclaim Submitaclaim;
+	public Expat.pages.Doingwell Doingwell;
+	public UHGglobalinteligencecenter globalintelligencecenter;
+	public InternationalEAP InternationalEAp;
+	public static FileInputStream fip;
+	public static Properties prop;
+	public ArrangeDirectPayment ArrangeDirectPayment;
+	public AllAboutUGHCg AboutUHCG;
+	public GuaranteeOfPayment step2;
+	public EnterClaimInfoPage enterClaimInfoPage;
+	  
+
+    public List<String> realDeviceList = new ArrayList<>(Arrays.asList("Samsung_Galaxy_S8_optum_us3",
+			"Samsung_Galaxy_S8_optum_us4","iPhone_7_optum_us5","iPhone_7_uhg_us","iPhone_7_optum_us6"));
     
-    <!-- Modern Browser Configuration -->
-    <test name="GGAutomation_Chrome">
-        <parameter name="browser" value="chrome" />
-        <parameter name="browserversion" value="latest" />
-        
-        <!-- Group tests by functionality -->
-        <groups>
-            <run>
-                <include name="smoke"/>
-                <include name="regression"/>
-            </run>
-        </groups>
-        
-        <classes>
-            <!-- Core Functionality Tests -->
-            <class name="Expat.tests.HomePageTest" />
-            <class name="Expat.tests.FooterTest" />
-            
-            <!-- Care Search Tests -->
-            <class name="Expat.tests.FindCareTabOptions" />
-            <class name="Expat.tests.InternationalProvsearch" />
-            
-            <!-- GOP Related Tests -->
-            <class name="Expat.tests.GOPConfirmationTest" />
-            <class name="Expat.tests.GOPSendEmailModalTest" />
-            <class name="Expat.tests.GuaranteeOfPaymentTest" />
-        </classes>
-    </test>
-    
-    <!-- Cross-browser Testing -->
-    <test name="GGAutomation_Firefox">
-        <parameter name="browser" value="firefox" />
-        <parameter name="browserversion" value="latest" />
-        <classes>
-            <class name="Expat.tests.HomePageTest" />
-            <class name="Expat.tests.FindCareTabOptions" />
-        </classes>
-    </test>
-</suite>
+    public String test_object_api_key = "D7A04CE39E0A42D1BF66AECE3EDAAAD8";
+
+   
+               public boolean status=true;
+               public int totalIterations =0;
+               public int currentIteration=1;
+               public String initialTIme=null;
+               public int success_tests;
+	           	public int fail_tests;
+	           	public int skip_tests;
+	           	//public String starttime= null;
+	           	public String endTime;
+               ExtentReports extent;
+               ExtentTest test;
+               ExtentTest childTest = null;
+               ThreadLocal<ExtentTest> testStatusThread = new ThreadLocal<ExtentTest>();
+                    
+               public String ParallelExecutionFlag=Environment("ParallelExecution");
+               public String seleniumURI = "@ondemand.saucelabs.com:80";
+               public String buildTag = System.getenv("BUILD_TAG");
+               public String username = Environment("sauce_userName");
+               public String accesskey = Environment("sauce_accessKey");
+               public SauceOnDemandAuthentication authentication = new SauceOnDemandAuthentication(username, accesskey);
+               private ThreadLocal<WebDriver> webDriver = new ThreadLocal<WebDriver>();
+               private ThreadLocal<String> sessionId = new ThreadLocal<String>();
+               Date date = new Date();
+           	SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+           	String starttime= formatter.format(date).toString();
+               boolean reportAdded = false;
+               int st = 0;
+
+               @AfterClass
+              	
+              	public void setup2()
+              	{
+              		Automation_Dashboard.Calculate(success_tests, fail_tests, skip_tests);
+              	}
+               public void getExecutionDetails()
+               {
+                      try {
+                    	  		 appURL = ExcelUtility.getDatafromSheet("DB_CONFIG", 2, 2);
+								 System.out.println("Application URL :-" + appURL);
+								 TestRunEnvironmet = ExcelUtility.getDatafromSheet("DB_CONFIG", 2, 1);
+								 OptumID = ExcelUtility.getDatafromSheet("DB_CONFIG", 24, 1);
+								// System.out.println("###########################Optum ID is : "+ OptumID);
+								 String LinkPassword1 = ExcelUtility.getDatafromSheet("DB_CONFIG", 24, 2);
+								 LinkPassword =  PasswordProtect.decryptXOR(LinkPassword1);
+								// System.out.println("###########################LinkPassword is : "+ LinkPassword1+"|"+LinkPassword);
+								 String SecurityQuestion11 = ExcelUtility.getDatafromSheet("DB_CONFIG", 24, 3);
+								 SecurityQuestion1 =PasswordProtect.decryptXOR(SecurityQuestion11);
+								// System.out.println("###########################SecurityQuestion1 is : "+ SecurityQuestion1);
+								 String SecurityQuestion21 =ExcelUtility.getDatafromSheet("DB_CONFIG", 24, 4);
+								 SecurityQuestion2 = PasswordProtect.decryptXOR(SecurityQuestion21);
+								// System.out.println("###########################SecurityQuestion2 is : "+ SecurityQuestion2);
+								 String SecurityQuestion31 = ExcelUtility.getDatafromSheet("DB_CONFIG", 24, 5);
+								 SecurityQuestion3 = PasswordProtect.decryptXOR(SecurityQuestion31);
+								// System.out.println("###########################SecurityQuestion3 is : "+ SecurityQuestion3);
+								 String SecurityQuestion41 = ExcelUtility.getDatafromSheet("DB_CONFIG", 24, 6);
+								 SecurityQuestion4 = PasswordProtect.decryptXOR(SecurityQuestion41);
+								// System.out.println("###########################SecurityQuestion4 is : "+ SecurityQuestion4);
+								 browsertoexecute = ExcelUtility.getDatafromSheet("DB_CONFIG", 2, 3);
+					                 
+                      }catch(Exception e)
+                      {
+                    	  Reporter.insertReportLine(e);
+                      }
+               }
+
+               
+               /* Started for Sauce Parameterization */
+               public void getVersionDetails()
+               {
+                              try {
+                                             ExecutionPlatform = ExcelUtility.getDatafromSheet("DB_CONFIG", 2, 6);
+                                             
+                              }catch(Exception e)
+                              {
+                            	  Reporter.insertReportLine(e);
+                              }
+               }
+               /* Ended for Sauce Parameterization */
+               
+               
+               
+               public void getDriverDetails (){            	
+            	   Map<String, String> BD = ExcelUtility.getcolumnvalue("Browser");
+                   browsertoexecute= BD.get("browser");
+                   browserVersion = BD.get("browserversion");
+                   OS = BD.get("os");
+                   deviceName =BD.get("deviceName");
+               }
+               
+               
+               @BeforeTest(alwaysRun = true)
+               public void beforeTest()
+               {
+            	              getExecutionDetails();
+                              //getDriverDetails();
+                              getVersionDetails();
+               }
+
+               @BeforeSuite(alwaysRun = true)
+               public void beforeSuite() throws IOException
+               {
+                              sfAssert = new SoftAssert();
+                          //    currentBrowser = Environment("browser");
+                              reportGenerator();
+                    }
+   
+           //    @BeforeClass(alwaysRun = true)
+               public void beforClass() {
+                             /* testExecutionPlatform=ExecutionPlatform;
+                              if(testExecutionPlatform.equalsIgnoreCase("Local Machine")) {                    
+                            	  StartDriver();
+                                             getLoginPage();
+                                             try {
+                                             testDriver.manage().deleteAllCookies();
+                                             System.out.println("Deleted cookies..!!!!!");
+                                             }catch (Exception e) {
+                                                            System.out.println(e);
+                                             }
+                                }*/
+               }
+               
+               boolean isDependant;
+               @Parameters({"browser","browserversion","os"})
+               @BeforeMethod(alwaysRun=true)
+               public void beforMethod(@Optional("chrome") String browser, @Optional("90.0") String browserversion, @Optional("Windows 10") String os, Method method) throws Throwable   {
+            	 
+            	  currentBrowser = browser;
+            	   System.out.println("Execution of before method started");
+            	   currentTestName = method.getName();
+                   System.out.println("<*****>Started Execution of script "+currentTestName+"<*****>");
+               
+                              isDependant = false;
+                              try {                       
+                                             Test testClass = method.getAnnotation(Test.class);
+                                             if(testClass.dependsOnMethods().length>0) {
+                                                            isDependant = true;
+                                             }
+                         
+                        testExecutionPlatform=ExecutionPlatform;
+
+                                           //  currentTestName = method.getName();
+                                           //  System.out.println("<*****>Started Execution of script "+currentTestName+"<*****>");
+                                             startTestForReport(browser, browserversion, os, method.getName() );
+                                           
+                                            		   this.createDriver(browser,browserversion, os, method.getName(), deviceName);
+                                         			 
+                                            	   }
+                                            	 
+                              catch(Exception e)
+                              {
+                                             Reporter.insertReportLine(e);
+                              } 
+               
+               
+               }
+               
+               
+               
+               
+               
+	       @AfterMethod(alwaysRun = true)
+	       public void afterMethod(ITestResult result)
+	       {              
+               
+               System.out.println("Test Case "+result.getStatus());
+               System.out.println("<*****>Ended Execution of script "+result.getMethod().getMethodName()+"<*****>");
+               System.out.println("************************************************************************************************");
+              
+               try {
+   		        if (result.getStatus() == ITestResult.SUCCESS) {
+   		           
+   					success_tests++;
+   				        } else if (result.getStatus() == ITestResult.FAILURE) {
+   		            fail_tests++;
+   		        } else if (result.getStatus() == ITestResult.SKIP) {
+   		            skip_tests++;
+   		        }
+   		     } catch (Exception e) {
+   		        e.printStackTrace();
+   		    }try {
+                              //testDriver.quit();
+               Reporter.attachScreenShotInHTMLreport(testDriver, result);
+               
+               finalizeReport();
+               
+
+               if(conn!=null)
+               conn.close();
+               } catch (SQLException e) {
+                             Reporter.insertReportLine(e);
+               }
+               System.out.println("Closing driver");
+              /* currentDriver.close();
+               testDriver.quit();*/
+               
+               ((JavascriptExecutor) webDriver.get()).executeScript("sauce:job-result=" + (result.isSuccess() ? "passed" : "failed"));
+               webDriver.get().quit();          
+	       }
+               
+                              
+	       @AfterSuite(alwaysRun = true)
+           public void aftersuite() 
+           {
+                  try {
+                         exceptionLogContent.flush();
+                         exceptionLogContent.close();
+                         reportGenerator.close();
+                         
+                         Date date1= new Date();
+             			SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");	
+             			
+             			System.out.print("Open the following file to get the Current execution report>>: ");
+             			System.out.println(getReportFileName());
+             			endTime= formatter1.format(date1).toString();
+             			
+             	
+             			
+             			
+             			if (Environment("ShareFileIndicator").equals("1")){
+             				dashboard= new Automation_Dashboard();
+             				int pass= Automation_Dashboard.getpassdetails();
+             				int fail= Automation_Dashboard.getfaildetails();
+             				int skip= Automation_Dashboard.getskipdetails();
+             				dashboard.CreateJson(pass,fail,skip,starttime, endTime);
+             				String pth = System.getProperty("user.dir")+Environment("extentReportPath");
+             				String pth1 = System.getProperty("user.dir")+Environment("JsonReportPath");
+             				File Filename= dashboard.getTheNewestFile(pth,"html" );
+             				File Jsonname= dashboard.getTheNewestFile(pth1,"json");
+             				System.out.println("Latest Selenium Automation Report is---> "+Filename.getName());
+             				System.out.println("Latest JSON File fetched is---> "+ Jsonname.getName());
+             				
+             				dashboard.UploadTestFiles(Filename, Jsonname);
+             				
+             				System.out.println("All files have been uploaded");}
+             			else {
+             					System.out.println("Files are not uploaded");
+             				 }
+                       
+                  } catch (Exception e) {
+                	  Reporter.insertReportLine(e);
+                  }
+                          
+           }
+          
+           
+              
+               
+               @DataProvider(name = "Expat_Data")
+               public Object[][] Expat_Data(Method method)
+               {			
+            	   			ExcelUtility EU = new ExcelUtility();
+            	   			testName = method.getName();
+                            reportTestData = EU.ReadDataFromExcel(testName);
+                            totalIterations=reportTestData.length;  
+                            initialTIme=testStartTime();
+                          return reportTestData;
+               }
+               
+               
+//               @DataProvider(name = "Expat_Data1")
+//               public Object[][] Expat_Data1(Method method)			//ITestContext context, 
+//               {
+//            	          testName = method.getName();
+//                          String   testClass = method.getDeclaringClass().getCanonicalName();
+//                          String[] testClass1 = testClass.split("\\.");
+//                          int len = testClass1.length;
+//                          String sheetNameToParse =   testClass1[len-1];
+//                        		  ExcelUtility EU = new ExcelUtility();
+//                         try { 
+//                        	  	reportTestData = EU.DataProviderExcelUtility(testName, sheetNameToParse);
+//                         }catch (Exception exp)
+//						  {
+//						        exp.printStackTrace();
+//						        System.out.println("Your test name and table name are not maching: "+testName);
+//						   }
+//                       
+//                                totalIterations=reportTestData.length;  
+//                                initialTIme=testStartTime();
+//                                return reportTestData;
+//               }
+
+             public void startTestForReport(String browser, String browserVersion, String os, String testName)
+               {
+                      testExecutionPlatform=ExecutionPlatform;
+                      if(testExecutionPlatform.equalsIgnoreCase("Local Machine"))
+                      {
+	                         if(reportTestData == null)
+	                         {
+	                                        testStatus = reportGenerator.startTest(testName);
+	                         }
+	                         else if(reportTestData.length>1)
+	                         {
+	
+			                            if(!reportAdded) {
+			                                           testStatus = reportGenerator.startTest(testName);
+			                                           dataProviderTest = testStatus;
+			                                           reportAdded = true;
+			                            }
+	                                   if(st!=reportTestData.length) {
+	                                                  for(int j = 0; j<=reportTestData[st].length-1; j++)
+	                                                  {              
+	                                                                 testParaMeters  +="'"+reportTestData[st][j]+"'"+", ";
+	                                                  }
+	                                                  st++;
+	                                                  testParaMeters = testParaMeters.substring(0, testParaMeters.length()-2);
+	                                                  testStatus = reportGenerator.startTest(testName+"_"+st+"("+testParaMeters+")");
+	                                                  testParaMeters = "";
+	                                                  dataProviderTest.appendChild(testStatus);
+	                                   }
+	                        }else
+	                        {
+	                        testStatus = reportGenerator.startTest(testName);
+	                        }
+                      }
+                      else
+                      {
+                         SeleniumHelper.startTest(testName+"_"+os+"_"+browser+"_"+browserVersion, "THIS TEST IS PART OF CROSS_BROWSER TESTING OF "+testName+" test case");
+                                     
+                      }              
+               }
+               
+             public void finalizeReport()
+               {
+                              testExecutionPlatform=ExecutionPlatform;
+                              if(testExecutionPlatform.equalsIgnoreCase("Local Machine"))
+                              {
+                                             if(reportTestData == null)
+                                             {
+                                                            reportGenerator.flush();
+                                                            reportGenerator.endTest(testStatus);
+                                                            
+                                             }
+                                             else if(reportTestData.length>1)
+                                             {
+                                                            reportGenerator.flush();
+                                                            if(st==reportTestData.length)
+                                                            {
+                                                                           
+                                                                           reportGenerator.endTest(dataProviderTest);
+                                                                           
+                                                            }
+                                             }
+                                             else if(reportTestData.length ==1 ){
+                                             reportGenerator.endTest(testStatus);
+                                             reportGenerator.flush();
+                                             }
+                              }
+                              else
+                                             {
+                                                            reportGenerator.flush();
+                                                            SeleniumHelper.endTest();
+                                             }
+               
+                              }
+               
+             
+				public WebDriver getWebDriver() {
+				           return webDriver.get();
+				}
+
+			    public String getSessionId() {
+			       return sessionId.get();
+			    }
+   
+                   @Override
+                   public SauceOnDemandAuthentication getAuthentication() {
+                       return authentication;
+                   }
+                   
+                   
+                   protected void createDriver(String browser, String version, String os, String methodName) throws MalformedURLException, UnexpectedException {
+                       DesiredCapabilities capabilities = new DesiredCapabilities();
+                         capabilities.setCapability("parentTunnel", "optumtest");
+                         capabilities.setCapability("tunnelIdentifier", "Optum-Stage");
+                         capabilities.setCapability(CapabilityType.BROWSER_NAME, browser);
+                         capabilities.setCapability(CapabilityType.VERSION, version);
+                         capabilities.setCapability(CapabilityType.PLATFORM, os);
+                         capabilities.setCapability("name", methodName+"_"+browser+"_"+version);
+                       //capabilities.setCapability("screenResolution", "1280x1024");
+
+                       if (buildTag != null) {
+                           capabilities.setCapability("build", buildTag);
+                       }
+                       
+                       //String url = "http://" + authentication.getUsername() + ":" + authentication.getAccessKey() + seleniumURI +"/wd/hub";
+                       //System.out.println(url);
+
+                       webDriver.set(new RemoteWebDriver(new URL("http://" + authentication.getUsername() + ":" + authentication.getAccessKey() + seleniumURI +"/wd/hub"), capabilities));
+                       
+                       String id = ((RemoteWebDriver) getWebDriver()).getSessionId().toString();
+                       sessionId.set(id);
+                       
+                       System.out.println("===================== Execution Started on Sauce Lab using "+browser.toUpperCase()+" browser on version "+version+" having session ID "+this.getSessionId()+" =====================");
+                   }
+               
+                 /*  public synchronized void StartDriver()
+                  {              
+                	        //currentBrowser ="InternetExplorer" ;
+                            //currentBrowser ="Firefox" ;
+                            currentBrowser ="chrome" ;
+                            closeDriverServers();
+                            closeAllOpenedBrowsers();
+                            killExcel();
+                                                                         
+                            if(currentBrowser.equalsIgnoreCase("Firefox"))
+                            {
+                                           testDriver=SeleniumHelper.launchDriver(currentBrowser,System.getProperty("user.dir")+Environment("ffDriverPath")
+                                                                         ,Long.parseLong(Environment("ffDefaultTestSyncTimePeriod")));  
+                            }
+                            else if(currentBrowser.equalsIgnoreCase("InternetExplorer"))
+                            {
+                                           testDriver=SeleniumHelper.launchDriver(currentBrowser,System.getProperty("user.dir")+Environment("ieDriverPath")
+                                                                         ,Long.parseLong(Environment("ieDefaultTestSyncTimePeriod")));  
+                            }
+                            else if(currentBrowser.equals("chrome"))
+                            {
+                                           testDriver=SeleniumHelper.launchDriver(currentBrowser,Environment("chromeDriverPath")
+                                                                         ,Long.parseLong(Environment("chromeDefaultTestSyncTimePeriod")));
+                            }
+             
+                 }*/
+               
+                              
+               public void startReport()
+               {
+                                extent = new ExtentReports(System.getProperty("user.dir")+"/ExtentReport-OutPut/myreport.html", true);
+                                extent.addSystemInfo("Host Name", "Sample Host")
+                                .addSystemInfo("EnvironMent","Test")
+                                .addSystemInfo("User", "Sample User");
+                                extent.loadConfig(new File(System.getProperty("user.dir")+"/extent-config.xml"));
+               }
+
+              /* public void getLoginPage()
+               {
+                              LoginPage = new LoginPage();
+                              System.out.println("Login page init");
+               }*/
+               
+               public String testStartTime()
+               {
+                              String startTIme=formatDateAndTime(getCurrentDateAndTime(),Environment("testTimeFormat"));
+                              return startTIme;
+               }
+               
+               public String testEndTime()
+               {
+                              String endTime=formatDateAndTime(getCurrentDateAndTime(),Environment("testTimeFormat"));
+                              return endTime;
+               }
+               
+               public void updateStatus(boolean statusVal)
+               {
+                              if(statusVal==false)
+                              {
+                                             status = statusVal;
+                              }                             
+                               currentIteration=currentIteration+1;
+               }
+                         
+              
+           	protected void createDriver(String browser, String version, String os, String methodName, String deviceName)
+           			throws IOException, JSONException {
+           		//System.out.println("protected void createDriver");
+           		try {
+           			fip = new FileInputStream(".\\src\\main\\resources\\config.Properties");
+           		} catch (FileNotFoundException e) {
+           			e.printStackTrace();
+           		}
+           		prop= new Properties();
+           		try {
+           			prop.load(fip);
+           		} catch (IOException e) {
+           			e.printStackTrace();
+           		}
+           		
+           		DesiredCapabilities capabilities = null;
+           		
+           		if(testExecutionPlatform.equalsIgnoreCase("Sauce")){
+           			LoginPageNew login = new LoginPageNew();
+            		//Expat.pages.LoginPageNew loginPage = Expat.pages.LoginPageNew.visit(getWebDriver());
+           	//		String authToken= login.visit(testDriver);
+        	 //   	System.out.println("token::::::"+authToken);
+
+	           		 capabilities = new DesiredCapabilities();
+	           		//Code for browser Testing
+	           		
+	           		// set desired capabilities to launch appropriate browser on Sauce
+	           		capabilities.setCapability(CapabilityType.BROWSER_NAME, browser);
+	           		capabilities.setCapability(CapabilityType.VERSION, version);
+	           		capabilities.setCapability(CapabilityType.PLATFORM, os);
+	           		capabilities.setCapability("deviceName", deviceName);
+	
+	           		//set your sauce labs access key
+	           		capabilities.setCapability("username", username);
+	                capabilities.setCapability("accessKey", accesskey);
+	               
+	           		URL US_endpoint = null;
+           		
+		              if((os.equalsIgnoreCase("iOS") || os.equalsIgnoreCase("android"))
+		           		   && (realDeviceList.contains(deviceName))){
+		            		   capabilities.setCapability("testobject_api_key", test_object_api_key);
+				           	   capabilities.setCapability("parentTunnel", "optumtest");
+				           	   
+				           	   capabilities.setCapability("tunnelIdentifier", "OptumRDC_Manual_Dev");
+				           	 //  URL EU_endpoint = new URL("https://eu1.appium.testobject.com/wd/hub");
+				           	   US_endpoint = new URL("https://us1.appium.testobject.com/wd/hub");
+				           	   webDriver.set( new RemoteWebDriver(US_endpoint, capabilities));
+		              }else{
+			            	  capabilities.setCapability("name", methodName);
+			           		  capabilities.setCapability("parentTunnel", "optumtest");
+			           		  capabilities.setCapability("tunnelIdentifier", "Optum-Stage");
+			           		//capabilities.setCapability("privateDevicesOnly", "true");
+			           		  //capabilities.setCapability("opentoken", authToken);
+			           		  RemoteWebDriver remoteDriver = new RemoteWebDriver(new URL("http://ondemand.saucelabs.com:80/wd/hub"), capabilities);
+			           		  remoteDriver.setFileDetector(new LocalFileDetector());
+			           	      webDriver.set(remoteDriver );
+			         }
+              
+           		}else{
+           			
+		@SuppressWarnings("unused")
+		DesiredCapabilities caps=null;
+		//closeDriverServers();
+        //closeAllOpenedBrowsers(browser);
+        killExcel();
+		
+		switch(browser) {
+		
+		case "chrome":
+			File file =new File(Environment("chromeDriverPath"));
+			//caps=DesiredCapabilities.chrome();
+			String path = System.getProperty("user.dir");
+			System.out.println("Chrome Base path: " +path);
+			String driverpath=path+file;
+		System.out.println("Chrome complete path: " +driverpath);
+			System.setProperty("webdriver.chrome.driver", driverpath);
+			ChromeOptions option = new ChromeOptions();
+			//option.setPageLoadStrategy(PageLoadStrategy.NONE);
+			option.addArguments("enable-automation");
+			//option.addArguments("--headless");
+			//option.addArguments("--window-size=1920,1080");
+			//options.addArguments("--no-sandbox");
+			option.addArguments("--disable-extensions");
+			option.setExperimentalOption("useAutomationExtension", false);
+			//option.addArguments("--dns-prefetch-disable");
+			option.addArguments("--disable-gpu");
+			//option.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+			//option.setExperimentalOption("useAutomationExtension", false);
+			//caps.setCapability(ChromeOptions.CAPABILITY, option);
+			webDriver.set(new ChromeDriver(option));
+			break;
+		case "IE":
+			File file1 =new File( Environment("ieDriverPath"));
+			//DesiredCapabilities capabilities;
+		//capabilities = DesiredCapabilities.internetExplorer();
+		//capabilities.setJavascriptEnabled(true);
+		InternetExplorerOptions options =new InternetExplorerOptions();
+		options.ignoreZoomSettings();
+		options.introduceFlakinessByIgnoringSecurityDomains();
+		options.requireWindowFocus();
+	//	options.destructivelyEnsureCleanSession();		
+		String path1 = System.getProperty("user.dir");
+		System.out.println("IE Base path: " +path1);
+		String iedriverpath=path1+file1;
+		System.out.println("ie complete path: " +iedriverpath);
+		System.setProperty("webdriver.ie.driver", iedriverpath);
+		//System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
+		webDriver.set(new InternetExplorerDriver(options));
+		break;
+		}
+
+	       			 
+      	}
+           		
+           		if (buildTag != null) {
+           			capabilities.setCapability("build", buildTag);
+           		}
+           		// set current sessionId
+           		String id = ((RemoteWebDriver) getWebDriver()).getSessionId().toString();
+           		sessionId.set(id);
+           		
+           	}
+           	
+               
+}
+
+
+Could not start a new session. Response code 500. Message: Infrastructure Error -- The Sauce VMs failed to start the browser or device.
+For more info, please check https://docs.saucelabs.com/dev/error-messages
+Build info: version: '4.1.2', revision: '9a5a329c5a'
+System info: host: 'LHTU05CG229094H', ip: '10.134.166.8', os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '17.0.8.1'
+Driver info: org.openqa.selenium.remote.RemoteWebDriver
+Command: [null, newSession {capabilities=[Capabilities {browserName: internet explorer, platformName: win10}], desiredCapabilities=Capabilities {accessKey: 6237fe90-04ab-4816-8182-f99..., browserName: internet explorer, deviceName: , name: TC_013, parentTunnel: optumtest, platform: WIN10, tunnelIdentifier: Optum-Stage, username: sso-optum-sruthi_perala, version: 11.0}}]
+Capabilities {}
