@@ -1,205 +1,93 @@
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.ie.InternetExplorerOptions;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.LocalFileDetector;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Properties;
-
-public class WebDriverManager {
-    private static final Logger logger = LoggerFactory.getLogger(WebDriverManager.class);
-    private static final ThreadLocal<RemoteWebDriver> webDriver = new ThreadLocal<>();
-    private final Properties prop;
-    private final List<String> realDeviceList; // Assume this is initialized elsewhere
-
-    protected void createDriver(String browser, String version, String os, String methodName, String deviceName)
-            throws IOException, JSONException {
-        
-        Properties prop = loadProperties();
-        
-        if (testExecutionPlatform.equalsIgnoreCase("Sauce")) {
-            configureSauceLabsDriver(browser, version, os, deviceName, methodName);
-        } else {
-            configureLocalDriver(browser);
-        }
-    }
-
-    private Properties loadProperties() throws IOException {
-        Properties properties = new Properties();
-        String configPath = "src/main/resources/config.properties";
-        
-        try (FileInputStream fis = new FileInputStream(configPath)) {
-            properties.load(fis);
-            return properties;
-        } catch (IOException e) {
-            logger.error("Failed to load configuration file: " + configPath, e);
-            throw e;
-        }
-    }
-
-    private void configureSauceLabsDriver(String browser, String version, String os, String deviceName, String methodName) {
-        LoginPageNew login = new LoginPageNew();
-        DesiredCapabilities capabilities = createBasicCapabilities(browser, version, os, deviceName);
-        
-        if (isMobileDevice(os) && isRealDevice(deviceName)) {
-            configureMobileDevice(capabilities);
-        } else {
-            configureBrowserDevice(capabilities, methodName);
-        }
-    }
-
-    private DesiredCapabilities createBasicCapabilities(String browser, String version, String os, String deviceName) {
+protected void createDriver(String browser, String version, String os, String methodName, String deviceName) 
+        throws IOException, JSONException {
+    
+    Properties prop = loadProperties();
+    
+    if (testExecutionPlatform.equalsIgnoreCase("Sauce")) {
+        // SauceLabs Configuration
         DesiredCapabilities capabilities = new DesiredCapabilities();
-        
         capabilities.setCapability(CapabilityType.BROWSER_NAME, browser);
         capabilities.setCapability(CapabilityType.VERSION, version);
         capabilities.setCapability(CapabilityType.PLATFORM, os);
         capabilities.setCapability("deviceName", deviceName);
         
-        capabilities.setCapability("username", getEnvironmentVariable("SAUCE_USERNAME"));
-        capabilities.setCapability("accessKey", getEnvironmentVariable("SAUCE_ACCESS_KEY"));
-        
-        return capabilities;
-    }
+        // Load SauceLabs credentials from properties
+        capabilities.setCapability("username", prop.getProperty("sauce.username"));
+        capabilities.setCapability("accessKey", prop.getProperty("sauce.accessKey"));
 
-    private boolean isMobileDevice(String os) {
-        return os.equalsIgnoreCase("iOS") || os.equalsIgnoreCase("android");
-    }
-
-    private boolean isRealDevice(String deviceName) {
-        return realDeviceList.contains(deviceName);
-    }
-
-    private void configureMobileDevice(DesiredCapabilities capabilities) {
-        try {
-            capabilities.setCapability("testobject_api_key", getEnvironmentVariable("TEST_OBJECT_API_KEY"));
+        if ((os.equalsIgnoreCase("iOS") || os.equalsIgnoreCase("android")) 
+                && (realDeviceList.contains(deviceName))) {
+            // Mobile device configuration
+            capabilities.setCapability("testobject_api_key", prop.getProperty("sauce.testobject.apikey"));
             capabilities.setCapability("parentTunnel", "optumtest");
             capabilities.setCapability("tunnelIdentifier", "OptumRDC_Manual_Dev");
             
             URL usEndpoint = new URL("https://us1.appium.testobject.com/wd/hub");
-            RemoteWebDriver driver = new RemoteWebDriver(usEndpoint, capabilities);
-            webDriver.set(driver);
-        } catch (MalformedURLException e) {
-            logger.error("Failed to create mobile device driver", e);
-            throw new RuntimeException("Failed to initialize mobile driver", e);
-        }
-    }
-
-    private void configureBrowserDevice(DesiredCapabilities capabilities, String methodName) {
-        try {
+            webDriver.set(new RemoteWebDriver(usEndpoint, capabilities));
+        } else {
+            // Browser configuration
             capabilities.setCapability("name", methodName);
             capabilities.setCapability("parentTunnel", "optumtest");
             capabilities.setCapability("tunnelIdentifier", "Optum-Stage");
             
-            URL sauceLabsUrl = new URL("http://ondemand.saucelabs.com:80/wd/hub");
-            RemoteWebDriver driver = new RemoteWebDriver(sauceLabsUrl, capabilities);
-            driver.setFileDetector(new LocalFileDetector());
-            webDriver.set(driver);
-        } catch (MalformedURLException e) {
-            logger.error("Failed to create browser driver", e);
-            throw new RuntimeException("Failed to initialize browser driver", e);
+            RemoteWebDriver remoteDriver = new RemoteWebDriver(
+                new URL("http://ondemand.saucelabs.com:80/wd/hub"), 
+                capabilities
+            );
+            remoteDriver.setFileDetector(new LocalFileDetector());
+            webDriver.set(remoteDriver);
         }
-    }
-
-    private void configureLocalDriver(String browser) {
+    } else {
+        // Local driver configuration
         killExcel();
         
         switch (browser.toLowerCase()) {
             case "chrome":
-                setupChromeDriver();
+                File chromeFile = new File(prop.getProperty("chromeDriverPath"));
+                String chromePath = System.getProperty("user.dir") + chromeFile;
+                System.setProperty("webdriver.chrome.driver", chromePath);
+                
+                ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.addArguments("enable-automation");
+                chromeOptions.addArguments("--disable-extensions");
+                chromeOptions.setExperimentalOption("useAutomationExtension", false);
+                chromeOptions.addArguments("--disable-gpu");
+                
+                webDriver.set(new ChromeDriver(chromeOptions));
                 break;
+                
             case "ie":
-                setupIEDriver();
+                File ieFile = new File(prop.getProperty("ieDriverPath"));
+                String iePath = System.getProperty("user.dir") + ieFile;
+                System.setProperty("webdriver.ie.driver", iePath);
+                
+                InternetExplorerOptions ieOptions = new InternetExplorerOptions();
+                ieOptions.ignoreZoomSettings();
+                ieOptions.introduceFlakinessByIgnoringSecurityDomains();
+                ieOptions.requireWindowFocus();
+                
+                webDriver.set(new InternetExplorerDriver(ieOptions));
                 break;
+                
             default:
                 throw new IllegalArgumentException("Unsupported browser type: " + browser);
         }
     }
+}
 
-    private void setupChromeDriver() {
-        String driverPath = getDriverPath("chromeDriverPath");
-        System.setProperty("webdriver.chrome.driver", driverPath);
+private Properties loadProperties() throws IOException {
+    Properties properties = new Properties();
+    try (FileInputStream fis = new FileInputStream("src/main/resources/config.properties")) {
+        properties.load(fis);
         
-        ChromeOptions options = createChromeOptions();
-        webDriver.set(new ChromeDriver(options));
-    }
-
-    private ChromeOptions createChromeOptions() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments(
-            "enable-automation",
-            "--disable-extensions",
-            "--disable-gpu"
-        );
-        options.setExperimentalOption("useAutomationExtension", false);
-        return options;
-    }
-
-    private void setupIEDriver() {
-        String driverPath = getDriverPath("ieDriverPath");
-        System.setProperty("webdriver.ie.driver", driverPath);
-        
-        InternetExplorerOptions options = createIEOptions();
-        webDriver.set(new InternetExplorerDriver(options));
-    }
-
-    private InternetExplorerOptions createIEOptions() {
-        InternetExplorerOptions options = new InternetExplorerOptions();
-        options.ignoreZoomSettings();
-        options.introduceFlakinessByIgnoringSecurityDomains();
-        options.requireWindowFocus();
-        return options;
-    }
-
-    private String getDriverPath(String driverPropertyName) {
-        String basePath = System.getProperty("user.dir");
-        String driverRelativePath = Environment(driverPropertyName);
-        File driverFile = new File(driverRelativePath);
-        String fullPath = basePath + driverFile;
-        
-        logger.info("Driver base path: {}", basePath);
-        logger.info("Complete driver path: {}", fullPath);
-        
-        if (!new File(fullPath).exists()) {
-            throw new IllegalStateException(
-                String.format("Driver not found at path: %s", fullPath)
-            );
+        // Validate required properties
+        String[] requiredProps = {"sauce.username", "sauce.accessKey", "sauce.testobject.apikey"};
+        for (String prop : requiredProps) {
+            if (properties.getProperty(prop) == null || properties.getProperty(prop).trim().isEmpty()) {
+                throw new IllegalStateException("Missing required property: " + prop);
+            }
         }
         
-        return fullPath;
-    }
-
-    private String getEnvironmentVariable(String variableName) {
-        String value = System.getenv(variableName);
-        if (value == null || value.isEmpty()) {
-            throw new IllegalStateException(
-                String.format("Environment variable %s is not set", variableName)
-            );
-        }
-        return value;
-    }
-
-    // Assume these methods are implemented elsewhere
-    private void killExcel() {
-        // Implementation for killing Excel processes
-    }
-
-    private String Environment(String key) {
-        // Implementation for getting environment variables
-        return "";
-    }
-
-    public RemoteWebDriver getWebDriver() {
-        return webDriver.get();
+        return properties;
     }
 }
