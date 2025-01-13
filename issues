@@ -1,90 +1,123 @@
-protected void createDriver(String browser, String version, String os, String methodName, String deviceName)
-        throws IOException, JSONException {
-    FileInputStream fip = null;
-    Properties prop = new Properties();
-    try {
-        fip = new FileInputStream(".\\src\\main\\resources\\config.Properties");
-        prop.load(fip);
-    } catch (FileNotFoundException e) {
-        e.printStackTrace();
-    } catch (IOException e) {
-        e.printStackTrace();
-    } finally {
-        if (fip != null) {
-            fip.close();
-        }
-    }
+	protected void createDriver(String browser, String version, String os, String methodName, String deviceName)
+           			throws IOException, JSONException {
+           		//System.out.println("protected void createDriver");
+           		try {
+           			fip = new FileInputStream(".\\src\\main\\resources\\config.Properties");
+           		} catch (FileNotFoundException e) {
+           			e.printStackTrace();
+           		}
+           		prop= new Properties();
+           		try {
+           			prop.load(fip);
+           		} catch (IOException e) {
+           			e.printStackTrace();
+           		}
+           		
+           		DesiredCapabilities capabilities = null;
+           		
+           		if(testExecutionPlatform.equalsIgnoreCase("Sauce")){
+           			LoginPageNew login = new LoginPageNew();
+            		//Expat.pages.LoginPageNew loginPage = Expat.pages.LoginPageNew.visit(getWebDriver());
+           	//		String authToken= login.visit(testDriver);
+        	 //   	System.out.println("token::::::"+authToken);
 
-    DesiredCapabilities capabilities = new DesiredCapabilities();
-    if (testExecutionPlatform.equalsIgnoreCase("Sauce")) {
-        try {
-            capabilities.setCapability(CapabilityType.BROWSER_NAME, browser);
-            capabilities.setCapability(CapabilityType.VERSION, version);
-            capabilities.setCapability(CapabilityType.PLATFORM, os);
-            capabilities.setCapability("deviceName", deviceName);
-            capabilities.setCapability("username", username);
-            capabilities.setCapability("accessKey", accesskey);
+	           		 capabilities = new DesiredCapabilities();
+	           		//Code for browser Testing
+	           		
+	           		// set desired capabilities to launch appropriate browser on Sauce
+	           		capabilities.setCapability(CapabilityType.BROWSER_NAME, browser);
+	           		capabilities.setCapability(CapabilityType.VERSION, version);
+	           		capabilities.setCapability(CapabilityType.PLATFORM, os);
+	           		capabilities.setCapability("deviceName", deviceName);
+	
+	           		//set your sauce labs access key
+	           		capabilities.setCapability("username", username);
+	                capabilities.setCapability("accessKey", accesskey);
+	               
+	           		URL US_endpoint = null;
+           		
+		              if((os.equalsIgnoreCase("iOS") || os.equalsIgnoreCase("android"))
+		           		   && (realDeviceList.contains(deviceName))){
+		            		   capabilities.setCapability("testobject_api_key", test_object_api_key);
+				           	   capabilities.setCapability("parentTunnel", "optumtest");
+				           	   
+				           	   capabilities.setCapability("tunnelIdentifier", "OptumRDC_Manual_Dev");
+				           	 //  URL EU_endpoint = new URL("https://eu1.appium.testobject.com/wd/hub");
+				           	   US_endpoint = new URL("https://us1.appium.testobject.com/wd/hub");
+				           	   webDriver.set( new RemoteWebDriver(US_endpoint, capabilities));
+		              }else{
+			            	  capabilities.setCapability("name", methodName);
+			           		  capabilities.setCapability("parentTunnel", "optumtest");
+			           		  capabilities.setCapability("tunnelIdentifier", "Optum-Stage");
+			           		//capabilities.setCapability("privateDevicesOnly", "true");
+			           		  //capabilities.setCapability("opentoken", authToken);
+			           		  RemoteWebDriver remoteDriver = new RemoteWebDriver(new URL("http://ondemand.saucelabs.com:80/wd/hub"), capabilities);
+			           		  remoteDriver.setFileDetector(new LocalFileDetector());
+			           	      webDriver.set(remoteDriver );
+			         }
+              
+           		}else{
+           			
+		@SuppressWarnings("unused")
+		DesiredCapabilities caps=null;
+		//closeDriverServers();
+        //closeAllOpenedBrowsers(browser);
+        killExcel();
+		
+		switch(browser) {
+		
+		case "chrome":
+			File file =new File(Environment("chromeDriverPath"));
+			//caps=DesiredCapabilities.chrome();
+			String path = System.getProperty("user.dir");
+			System.out.println("Chrome Base path: " +path);
+			String driverpath=path+file;
+		System.out.println("Chrome complete path: " +driverpath);
+			System.setProperty("webdriver.chrome.driver", driverpath);
+			ChromeOptions option = new ChromeOptions();
+			//option.setPageLoadStrategy(PageLoadStrategy.NONE);
+			option.addArguments("enable-automation");
+			//option.addArguments("--headless");
+			//option.addArguments("--window-size=1920,1080");
+			//options.addArguments("--no-sandbox");
+			option.addArguments("--disable-extensions");
+			option.setExperimentalOption("useAutomationExtension", false);
+			//option.addArguments("--dns-prefetch-disable");
+			option.addArguments("--disable-gpu");
+			//option.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+			//option.setExperimentalOption("useAutomationExtension", false);
+			//caps.setCapability(ChromeOptions.CAPABILITY, option);
+			webDriver.set(new ChromeDriver(option));
+			break;
+		case "IE":
+			File file1 =new File( Environment("ieDriverPath"));
+			//DesiredCapabilities capabilities;
+		//capabilities = DesiredCapabilities.internetExplorer();
+		//capabilities.setJavascriptEnabled(true);
+		InternetExplorerOptions options =new InternetExplorerOptions();
+		options.ignoreZoomSettings();
+		options.introduceFlakinessByIgnoringSecurityDomains();
+		options.requireWindowFocus();
+	//	options.destructivelyEnsureCleanSession();		
+		String path1 = System.getProperty("user.dir");
+		System.out.println("IE Base path: " +path1);
+		String iedriverpath=path1+file1;
+		System.out.println("ie complete path: " +iedriverpath);
+		System.setProperty("webdriver.ie.driver", iedriverpath);
+		//System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
+		webDriver.set(new InternetExplorerDriver(options));
+		break;
+		}
 
-            URL US_endpoint = new URL("https://us1.appium.testobject.com/wd/hub");
-
-            if ((os.equalsIgnoreCase("iOS") || os.equalsIgnoreCase("android")) && (realDeviceList.contains(deviceName))) {
-                capabilities.setCapability("testobject_api_key", test_object_api_key);
-                capabilities.setCapability("parentTunnel", "optumtest");
-                capabilities.setCapability("tunnelIdentifier", "OptumRDC_Manual_Dev");
-                webDriver.set(new RemoteWebDriver(US_endpoint, capabilities));
-            } else {
-                capabilities.setCapability("name", methodName);
-                capabilities.setCapability("parentTunnel", "optumtest");
-                capabilities.setCapability("tunnelIdentifier", "Optum-Stage");
-                RemoteWebDriver remoteDriver = new RemoteWebDriver(new URL("http://ondemand.saucelabs.com:80/wd/hub"), capabilities);
-                remoteDriver.setFileDetector(new LocalFileDetector());
-                webDriver.set(remoteDriver);
-            }
-
-            if (buildTag != null) {
-                capabilities.setCapability("build", buildTag);
-            }
-
-            String sessionId = ((RemoteWebDriver) getWebDriver()).getSessionId().toString();
-            this.sessionId.set(sessionId);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            System.out.println("Malformed Sauce Labs URL.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error setting up Sauce Labs driver.");
-        }
-    } else {
-        switch (browser) {
-            case "chrome":
-                setupLocalChromeDriver();
-                break;
-            case "IE":
-                setupLocalIEDriver();
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported browser: " + browser);
-        }
-    }
-}
-
-private void setupLocalChromeDriver() {
-    String path = System.getProperty("user.dir") + Environment("chromeDriverPath");
-    System.setProperty("webdriver.chrome.driver", path);
-    ChromeOptions options = new ChromeOptions();
-    options.addArguments("enable-automation");
-    options.addArguments("--disable-extensions");
-    options.setExperimentalOption("useAutomationExtension", false);
-    options.addArguments("--disable-gpu");
-    webDriver.set(new ChromeDriver(options));
-}
-
-private void setupLocalIEDriver() {
-    String path = System.getProperty("user.dir") + Environment("ieDriverPath");
-    System.setProperty("webdriver.ie.driver", path);
-    InternetExplorerOptions options = new InternetExplorerOptions();
-    options.ignoreZoomSettings();
-    options.introduceFlakinessByIgnoringSecurityDomains();
-    options.requireWindowFocus();
-    webDriver.set(new InternetExplorerDriver(options));
-}
+	       			 
+      	}
+           		
+           		if (buildTag != null) {
+           			capabilities.setCapability("build", buildTag);
+           		}
+           		// set current sessionId
+           		String id = ((RemoteWebDriver) getWebDriver()).getSessionId().toString();
+           		sessionId.set(id);
+           		
+           	}
+           	
