@@ -1,93 +1,29 @@
-protected void createDriver(String browser, String version, String os, String methodName, String deviceName) 
-        throws IOException, JSONException {
-    
-    Properties prop = loadProperties();
-    
-    if (testExecutionPlatform.equalsIgnoreCase("Sauce")) {
-        // SauceLabs Configuration
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability(CapabilityType.BROWSER_NAME, browser);
-        capabilities.setCapability(CapabilityType.VERSION, version);
-        capabilities.setCapability(CapabilityType.PLATFORM, os);
-        capabilities.setCapability("deviceName", deviceName);
-        
-        // Load SauceLabs credentials from properties
-        capabilities.setCapability("username", prop.getProperty("sauce.username"));
-        capabilities.setCapability("accessKey", prop.getProperty("sauce.accessKey"));
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
-        if ((os.equalsIgnoreCase("iOS") || os.equalsIgnoreCase("android")) 
-                && (realDeviceList.contains(deviceName))) {
-            // Mobile device configuration
-            capabilities.setCapability("testobject_api_key", prop.getProperty("sauce.testobject.apikey"));
-            capabilities.setCapability("parentTunnel", "optumtest");
-            capabilities.setCapability("tunnelIdentifier", "OptumRDC_Manual_Dev");
-            
-            URL usEndpoint = new URL("https://us1.appium.testobject.com/wd/hub");
-            webDriver.set(new RemoteWebDriver(usEndpoint, capabilities));
-        } else {
-            // Browser configuration
-            capabilities.setCapability("name", methodName);
-            capabilities.setCapability("parentTunnel", "optumtest");
-            capabilities.setCapability("tunnelIdentifier", "Optum-Stage");
-            
-            RemoteWebDriver remoteDriver = new RemoteWebDriver(
-                new URL("http://ondemand.saucelabs.com:80/wd/hub"), 
-                capabilities
-            );
-            remoteDriver.setFileDetector(new LocalFileDetector());
-            webDriver.set(remoteDriver);
-        }
-    } else {
-        // Local driver configuration
-        killExcel();
-        
-        switch (browser.toLowerCase()) {
-            case "chrome":
-                File chromeFile = new File(prop.getProperty("chromeDriverPath"));
-                String chromePath = System.getProperty("user.dir") + chromeFile;
-                System.setProperty("webdriver.chrome.driver", chromePath);
-                
-                ChromeOptions chromeOptions = new ChromeOptions();
-                chromeOptions.addArguments("enable-automation");
-                chromeOptions.addArguments("--disable-extensions");
-                chromeOptions.setExperimentalOption("useAutomationExtension", false);
-                chromeOptions.addArguments("--disable-gpu");
-                
-                webDriver.set(new ChromeDriver(chromeOptions));
-                break;
-                
-            case "ie":
-                File ieFile = new File(prop.getProperty("ieDriverPath"));
-                String iePath = System.getProperty("user.dir") + ieFile;
-                System.setProperty("webdriver.ie.driver", iePath);
-                
-                InternetExplorerOptions ieOptions = new InternetExplorerOptions();
-                ieOptions.ignoreZoomSettings();
-                ieOptions.introduceFlakinessByIgnoringSecurityDomains();
-                ieOptions.requireWindowFocus();
-                
-                webDriver.set(new InternetExplorerDriver(ieOptions));
-                break;
-                
-            default:
-                throw new IllegalArgumentException("Unsupported browser type: " + browser);
-        }
-    }
-}
+public class IEWebDriverExample {
+    public static void main(String[] args) {
+        DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
+        capabilities.setCapability("platform", Platform.WINDOWS);
+        capabilities.setCapability("version", "11");
+        capabilities.setCapability("ignoreProtectedModeSettings", true);
+        capabilities.setCapability("enablePersistentHover", true);
+        capabilities.setCapability("ignoreZoomSetting", true);
+        capabilities.setCapability("ensureCleanSession", true);
+        capabilities.setCapability("acceptSslCerts", true);
+        capabilities.setCapability("browserName", "internet explorer");
 
-private Properties loadProperties() throws IOException {
-    Properties properties = new Properties();
-    try (FileInputStream fis = new FileInputStream("src/main/resources/config.properties")) {
-        properties.load(fis);
+        WebDriver driver = new RemoteWebDriver(new URL("https://<SAUCE_USERNAME>:<SAUCE_ACCESS_KEY>@ondemand.saucelabs.com:443/wd/hub"), capabilities);
         
-        // Validate required properties
-        String[] requiredProps = {"sauce.username", "sauce.accessKey", "sauce.testobject.apikey"};
-        for (String prop : requiredProps) {
-            if (properties.getProperty(prop) == null || properties.getProperty(prop).trim().isEmpty()) {
-                throw new IllegalStateException("Missing required property: " + prop);
-            }
+        try {
+            driver.get("http://www.example.com");
+            // Your test code here
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            driver.quit();
         }
-        
-        return properties;
     }
 }
